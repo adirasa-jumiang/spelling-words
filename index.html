@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>R.A. Adirasa</title>
+  <style>
+    body {
+      margin: 0;
+      /*font-family: sans-serif;*/
+      font-family: 'Comic Sans MS', sans-serif;
+      background-color: #f9f9f9;
+      text-align: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .wrapper {
+      display: flex;
+      transition: transform 0.3s ease;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      height: 100vh;
+      background-color: #333;
+      color: white;
+      padding: 1em;
+      position: fixed;
+      top: 0;
+      left: -280px;
+      z-index: 1000;
+      transition: left 0.3s ease;
+      text-align: left;
+    }
+
+    .sidebar.open {
+      left: 0;
+    }
+
+    .sidebar h2 {
+      color: #fff;
+    }
+
+    .sidebar a {
+      display: block;
+      color: #ccc;
+      padding: 10px 0;
+      text-decoration: none;
+    }
+
+    .sidebar a:hover {
+      color: #fff;
+    }
+
+    /* Overlay (untuk HP) */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.3);
+      z-index: 999;
+      display: none;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    .menu-btn {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 1100;
+      background: #fff;
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+/* css abc */
+h1 {
+      color: #f57c00;
+    }
+    #huruf-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .huruf {
+      font-size: 24px;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      background: #ff9800;
+      color: white;
+      cursor: pointer;
+    }
+    #kata {
+      font-size: 32px;
+      margin: 20px;
+      min-height: 40px;
+    }
+    .opsi {
+      background: #4caf50;
+      margin: 5px;
+    }
+    .hapus {
+      background: #e53935;
+    }
+    @media (max-width: 600px) {
+      .huruf {
+        font-size: 20px;
+        padding: 8px;
+      }
+      #kata {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="menu-btn" onclick="toggleSidebar()">☰</div>
+
+  <div class="sidebar" id="sidebar">
+    <br><h2>Menu</h2>
+    <a href="index.html">Beranda</a>
+    <a href="https://ra-adirasa.blogspot.com/">R.A. Adirasa</a>
+    <a href="help.html">Cara Pakai</a>
+    <a href="about.html">Tentang Aplikasi</a>
+  </div>
+
+  <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+ <h1>Susun Huruf Jadi Kata</h1>
+  <p>Klik huruf-huruf untuk menyusun kata lalu tekan "Baca"</p>
+
+  <div id="huruf-container"></div>
+  <div id="kata"></div>
+
+  <div>
+    <button class="huruf opsi" onclick="tambahSpasi()">Spasi</button>
+    <button class="huruf opsi" onclick="tambahPenghubung()">-</button>
+    <button class="huruf opsi" onclick="hapusSatu()">Hapus Satu</button>
+    <button class="huruf opsi" onclick="baca()">Baca</button>
+    <button class="huruf hapus" onclick="hapusSemua()">Hapus Semua</button>
+  </div>
+
+  <script>
+    const container = document.getElementById('huruf-container');
+    const kataBox = document.getElementById('kata');
+    let kata = '';
+
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(h => {
+      const btn = document.createElement('button');
+      btn.textContent = h;
+      btn.className = 'huruf';
+      btn.onclick = () => {
+        kata += h;
+        kataBox.textContent = kata;
+      };
+      container.appendChild(btn);
+    });
+
+    function tambahSpasi() {
+      kata += ' ';
+      kataBox.textContent = kata;
+    }
+
+    function tambahPenghubung() {
+      kata += '-';
+      kataBox.textContent = kata;
+    }
+
+    function hapusSatu() {
+      kata = kata.slice(0, -1);
+      kataBox.textContent = kata;
+    }
+
+    function hapusSemua() {
+      kata = '';
+      kataBox.textContent = '';
+    }
+
+    function baca() {
+      if ('speechSynthesis' in window) {
+        const msg = new SpeechSynthesisUtterance(kata.toLowerCase());
+        msg.lang = 'id-ID';
+        speechSynthesis.speak(msg);
+      } else {
+        alert('Browser tidak mendukung TTS');
+      }
+    }
+  </script>
+
+<!-- menu -->
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+
+      sidebar.classList.toggle("open");
+      overlay.classList.toggle("active");
+    }
+
+  </script>
+
+</body>
+</html>
